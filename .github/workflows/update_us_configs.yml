@@ -1,0 +1,63 @@
+name: 🔄 بروزرسانی کانفیگ‌های آمریکا (US) هر ۲ ساعت
+
+on:
+  schedule:
+    # اجرا هر ۲ ساعت یکبار به صورت خودکار (دقیقه ۰ هر ساعت زوج)
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # امکان اجرای دستی با یک کلیک از تب Actions در گیت‌هاب
+
+# دسترسی نوشتن برای کامیت و ذخیره خودکار فایل‌ها در مخزن
+permissions:
+  contents: write
+
+concurrency:
+  group: v2ray-us-update
+  cancel-in-progress: true
+
+jobs:
+  update-us-configs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 دریافت کدهای مخزن (Checkout)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐍 نصب پایتون 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 نصب پیش‌نیازها
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install requests
+          fi
+
+      - name: 🚀 اجرای اسکریپت جمع‌آوری کانفیگ‌های آمریکا
+        run: |
+          python collector.py
+
+      - name: 💾 کامیت و پوش تغییرات به مخزن
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # افزودن فایل‌های سابسکریپشن
+          git add sub_us.txt sub_us_base64.txt sub_info.json 2>/dev/null || true
+
+          # بررسی اینکه آیا تغییری برای ذخیره وجود دارد یا خیر
+          if git diff --staged --quiet; then
+            echo "⚡ هیچ تغییر یا کانفیگ جدیدی برای ثبت وجود ندارد."
+          else
+            TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            git commit -m "🔄 بروزرسانی کانفیگ‌های US در $TIMESTAMP [skip ci]"
+            git push origin main
+            echo "✅ فایل‌های جدید با موفقیت در مخزن ثبت و پوش شدند."
+          fi
