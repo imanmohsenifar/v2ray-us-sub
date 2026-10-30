@@ -1,12 +1,12 @@
 {
-  "updated_at_utc": "2026-10-30T04:41:05.313535+00:00",
-  "total_us_configs": 1319,
-  "total_raw_fetched": 4386,
+  "updated_at_utc": "2026-10-30T12:15:41.956628+00:00",
+  "total_us_configs": 1332,
+  "total_raw_fetched": 4435,
   "protocol_breakdown": {
     "vless": 0,
-    "vmess": 250,
-    "trojan": 75,
-    "ss": 994,
+    "vmess": 254,
+    "trojan": 82,
+    "ss": 996,
     "other": 0
   },
   "format": "v2rayNG / Clash / Sing-box compatible Base64"
