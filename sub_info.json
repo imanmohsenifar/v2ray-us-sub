@@ -1,11 +1,11 @@
 {
-  "updated_at_utc": "2026-11-25T00:24:05.418944+00:00",
-  "total_us_configs": 1387,
-  "total_raw_fetched": 4534,
+  "updated_at_utc": "2026-11-25T10:56:07.183780+00:00",
+  "total_us_configs": 1374,
+  "total_raw_fetched": 4428,
   "protocol_breakdown": {
     "vless": 0,
-    "vmess": 272,
-    "trojan": 103,
+    "vmess": 262,
+    "trojan": 100,
     "ss": 1012,
     "other": 0
   },
